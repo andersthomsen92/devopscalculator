@@ -15,8 +15,8 @@ jobs:
 
       - name: Install required tools
         run: |  # Install ReportGenerator and Stryker tools
-          dotnet tool install --g dotnet-reportgenerator-globaltool
-          dotnet tool install --g dotnet-stryker
+          dotnet tool install -g dotnet-reportgenerator-globaltool
+          dotnet tool install -g dotnet-stryker
 
       - name: Run unit tests
         run: # Execute unit tests while collecting code coverage
