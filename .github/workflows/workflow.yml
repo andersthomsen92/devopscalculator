@@ -20,8 +20,9 @@ jobs:
 
       - name: Run unit tests
         run: # Execute unit tests while collecting code coverage
-          dotnet test --collect:"XPlat Code Coverage" --results-directory ./TestResults
-
+          dotnet test --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger "trx;LogFileName=test_results.trx"
+      
+      
       - name: Generate report
         run: # Generate code coverage report using ReportGenerator
           reportgenerator -reports:"./TestResults/*.xml" -targetdir:"./TestResults/CoverageOutput" -reporttypes:Html
