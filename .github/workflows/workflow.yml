@@ -31,14 +31,14 @@ jobs:
           dotnet stryker --break-at 80
 
       - name: Collect Coverage Report
-        if: always
+        if: always()
         uses: actions/upload-artifact@v3  # Upload the coverage report artifact to GitHub Actions
         with:
           name: coverage-report
           path: Tests/CoverageOutput/
 
       - name: Collect Stryker Report
-        if: always
+        if: always()
         uses: actions/upload-artifact@v3  # Upload the Stryker report artifact to GitHub Actions
         with:
           name: stryker-report
