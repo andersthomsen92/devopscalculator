@@ -26,8 +26,9 @@ jobs:
         run: ls -R ./TestResults  # List all files recursively in the TestResults folder
 
       - name: Generate report
-        run: |
-          reportgenerator -reports:"./TestResults/*.xml" -targetdir:"./TestResults/CoverageOutput" -reporttypes:Html
+        run: 
+          reportgenerator -reports:"./TestResults/**/*.xml" -targetdir:"./TestResults/CoverageOutput" -reporttypes:Html
+
 
       - name: Run Mutation Tests
         run: dotnet stryker --break-at 80 --output-dir ./TestResults/StrykerOutput
