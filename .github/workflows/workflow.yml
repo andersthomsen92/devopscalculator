@@ -19,27 +19,32 @@ jobs:
           dotnet tool install -g dotnet-stryker
 
       - name: Run unit tests
-        run: # Execute unit tests while collecting code coverage
+        run: |
           dotnet test --collect:"XPlat Code Coverage" --results-directory ./TestResults
 
+      - name: Debug: List files in TestResults
+        run: |
+          ls -R ./TestResults
+
       - name: Generate report
-        run: # Generate code coverage report using ReportGenerator
-          reportgenerator -reports:"./TestResults/*.xml" -targetdir:"Tests/CoverageOutput" -reporttypes:Html
+        run: |
+          # This should look inside TestResults/{guid}/ for coverage.cobertura.xml
+          reportgenerator -reports:"./TestResults/*/coverage.cobertura.xml" -targetdir:"Tests/CoverageOutput" -reporttypes:Html
 
       - name: Run Mutation Tests
-        run: # Run mutation tests using Stryker with a threshold of 80% mutation score
+        run: |
           dotnet stryker --break-at 80
 
       - name: Collect Coverage Report
-        if: always()
-        uses: actions/upload-artifact@v4  # Upload the coverage report artifact to GitHub Actions
+        if: always
+        uses: actions/upload-artifact@v3  # Upload the coverage report artifact to GitHub Actions
         with:
           name: coverage-report
           path: Tests/CoverageOutput/
 
       - name: Collect Stryker Report
-        if: always()
-        uses: actions/upload-artifact@v4  # Upload the Stryker report artifact to GitHub Actions
+        if: always
+        uses: actions/upload-artifact@v3  # Upload the Stryker report artifact to GitHub Actions
         with:
           name: stryker-report
           path: ./Tests/StrykerOutput/
