@@ -135,4 +135,76 @@ public class CachedCalculatorTest
         // Assert
         Assert.That(result, Is.False);
     }
+    
+    [Test]
+    public void Subtract_ShouldHandleNegativeResults()
+    {
+        var calc = new CachedCalculator();
+
+        // Test negative result
+        Assert.That(calc.Subtract(2, 3), Is.EqualTo(-1));
+    }
+
+    [Test]
+    public void Multiply_ShouldHandleZero()
+    {
+        var calc = new CachedCalculator();
+
+        // Test multiplication with zero
+        Assert.That(calc.Multiply(0, 5), Is.EqualTo(0));
+        Assert.That(calc.Multiply(5, 0), Is.EqualTo(0));
+    }
+
+    [Test]
+    public void Divide_ShouldThrowDivideByZeroException()
+    {
+        var calc = new CachedCalculator();
+
+        // Test division by zero
+        Assert.Throws<DivideByZeroException>(() => calc.Divide(5, 0));
+    }
+
+    [Test]
+    public void Divide_ShouldHandleNegativeNumbers()
+    {
+        var calc = new CachedCalculator();
+
+        // Test negative result
+        Assert.That(calc.Divide(-6, 3), Is.EqualTo(-2));
+        Assert.That(calc.Divide(6, -3), Is.EqualTo(-2));
+    }
+    
+    [Test]
+    public void Add_ShouldCacheResultsForRepeatedCalls()
+    {
+        var calc = new CachedCalculator();
+        var a = 2;
+        var b = 3;
+
+        // First call
+        var firstCall = calc.Add(a, b);
+    
+        // Second call (should return cached result)
+        var secondCall = calc.Add(a, b);
+    
+        Assert.That(firstCall, Is.EqualTo(secondCall));
+    }
+
+    [Test]
+    public void Subtract_ShouldCacheResultsForRepeatedCalls()
+    {
+        var calc = new CachedCalculator();
+        var a = 5;
+        var b = 3;
+
+        // First call
+        var firstCall = calc.Subtract(a, b);
+    
+        // Second call (should return cached result)
+        var secondCall = calc.Subtract(a, b);
+    
+        Assert.That(firstCall, Is.EqualTo(secondCall));
+    }
+
+
 }
