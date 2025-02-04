@@ -29,9 +29,8 @@ jobs:
         run: 
           reportgenerator -reports:"./TestResults/**/*.xml" -targetdir:"./TestResults/CoverageOutput" -reporttypes:Html
 
-
       - name: Run Mutation Tests
-        run: dotnet stryker --break-at 80 --output-dir ./TestResults/StrykerOutput
+        run: dotnet stryker --break-at 80 --output ./TestResults/StrykerOutput
 
       - name: Collect Coverage Report
         if: always()
