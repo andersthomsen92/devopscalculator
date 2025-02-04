@@ -14,35 +14,34 @@ jobs:
           fetch-depth: 0 # Fetch all history for accurate results of code analysis
 
       - name: Install required tools
-        run: |  # Install ReportGenerator and Stryker tools
+        run: |
           dotnet tool install -g dotnet-reportgenerator-globaltool
           dotnet tool install -g dotnet-stryker
 
-      - name: Run unit tests
-        run: # Execute unit tests while collecting code coverage
+      - name: Run unit tests and collect code coverage
+        run: |
           dotnet test --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger "trx;LogFileName=test_results.trx"
-      
-      
+
+      - name: List files in TestResults folder
+        run: ls -R ./TestResults  # List all files recursively in the TestResults folder
+
       - name: Generate report
-        run: # Generate code coverage report using ReportGenerator
+        run: |
           reportgenerator -reports:"./TestResults/*.xml" -targetdir:"./TestResults/CoverageOutput" -reporttypes:Html
 
       - name: Run Mutation Tests
-        run: # Run mutation tests using Stryker with a threshold of 80% mutation score
-          dotnet stryker --break-at 80 --output-dir ./TestResults/StrykerOutput
+        run: dotnet stryker --break-at 80 --output-dir ./TestResults/StrykerOutput
 
       - name: Collect Coverage Report
         if: always()
-        uses: actions/upload-artifact@v4  # Upload the coverage report artifact to GitHub Actions
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: ./TestResults/CoverageOutput/
 
       - name: Collect Stryker Report
         if: always()
-        uses: actions/upload-artifact@v4  # Upload the Stryker report artifact to GitHub Actions
+        uses: actions/upload-artifact@v4
         with:
           name: stryker-report
           path: ./TestResults/StrykerOutput/
-
-
