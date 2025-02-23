@@ -1,4 +1,5 @@
-name: workflow.yml
+name: workflow
+
 on:
   push:
     branches:
@@ -6,7 +7,6 @@ on:
 
 jobs:
   integration:
-    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -15,33 +15,33 @@ jobs:
 
       - name: Install required tools
         run: |
+          dotnet tool install -g dotnet-sonarscanner
           dotnet tool install -g dotnet-reportgenerator-globaltool
-          dotnet tool install -g dotnet-stryker
 
-      - name: Run unit tests and collect code coverage
-        run: |
-          dotnet test --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger "trx;LogFileName=test_results.trx"
+      - name: Start Static Code Analysis
+        run: | # INSERT RELEVANT VARIABLES BELOW
+          dotnet sonarscanner begin \
+          /k:"${{ vars.SONAR_PROJECT }}" \ 
+          /d:sonar.host.url="${{ vars.SONAR_URL }}" \
+          /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+          /d:sonar.coverageReportPaths="coverage-report/SonarQube.xml" \
+          /d:sonar.qualitygate.wait=true \
+          /d:sonar.qualitygate.timeout=300
 
-      - name: List files in TestResults folder
-        run: ls -R ./TestResults  # List all files recursively in the TestResults folder
+          - name: Build
+            run: dotnet build
 
-      - name: Generate report
-        run: 
-          reportgenerator -reports:"./TestResults/**/*.xml" -targetdir:"./TestResults/CoverageOutput" -reporttypes:Html
+          - name: Run unit tests
+            run: dotnet test --collect:"XPlat Code Coverage" --results-directory TestResults
 
-      - name: Run Mutation Tests
-        run: dotnet stryker --break-at 80 --output ./TestResults/StrykerOutput
+          - name: Generate report
+            run: |
+              reportgenerator \
+              -reports:TestResults/**/coverage.cobertura.xml \
+              -targetdir:coverage-report \
+              -reporttypes:SonarQube
 
-      - name: Collect Coverage Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: ./TestResults/CoverageOutput/
-
-      - name: Collect Stryker Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: stryker-report
-          path: ./TestResults/StrykerOutput/
+          - name: Complete Static Code Analysis
+            run: | # INSERT RELEVANT VARIABLES BELOW
+              dotnet sonarscanner end \
+                /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
