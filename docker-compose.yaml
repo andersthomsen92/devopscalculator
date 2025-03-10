@@ -1,0 +1,5 @@
+services:
+  web:
+    image: ghcr.io/andersthomsen92/calculator:staging
+    ports:
+      - "8080:8080"   
