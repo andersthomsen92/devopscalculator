@@ -1,5 +1,5 @@
 services:
   web:
-    image: ghcr.io/andersthomsen92/calculator:staging
+    image: ghcr.io/andersthomsen92/devopscalculator:staging
     ports:
       - "8080:8080"   
