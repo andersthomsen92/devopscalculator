@@ -40,12 +40,12 @@ jobs:
       - name: List files in TestResults folder
         run: ls -R ./TestResults  # Debugging step for me
 
-      - name: Generate coverage report
+      - name: Generate report
         run: |
           reportgenerator \
-          -reports:"./TestResults/**/*.xml" \
-          -targetdir:"./TestResults/CoverageOutput" \
-          -reporttypes:Html,SonarQube
+          -reports:TestResults/**/coverage.cobertura.xml \
+          -targetdir:coverage-report \
+          -reporttypes:SonarQube
 
       - name: Run Mutation Tests (Stryker)
         run: dotnet stryker --break-at 80 --output ./TestResults/StrykerOutput
