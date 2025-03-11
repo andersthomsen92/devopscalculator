@@ -11,11 +11,11 @@ COPY ["Calculator/Calculator.csproj", "Calculator/"]
 RUN dotnet restore "Calculator/Calculator.csproj"
 COPY . .
 WORKDIR "/src/Calculator"
-RUN dotnet build "Calculator.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "Calculator.csproj" -c "$BUILD_CONFIGURATION" -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Calculator.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Calculator.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
