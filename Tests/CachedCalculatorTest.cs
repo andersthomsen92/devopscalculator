@@ -205,6 +205,197 @@ public class CachedCalculatorTest
     
         Assert.That(firstCall, Is.EqualTo(secondCall));
     }
+    
+    
+    
+    [Test]
+        public void Add_CachesResult()
+        {
+            // Arrange
+            var calc = new CachedCalculator();
+            int a = 3, b = 4;
+            
+            // Act
+            var result1 = calc.Add(a, b);
+            int initialCacheCount = calc._cache.Count;
+            var result2 = calc.Add(a, b);
+            
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result1, Is.EqualTo(result2));
+                Assert.That(calc._cache, Has.Count.EqualTo(initialCacheCount));
+            });
+        }
+        
+        [Test]
+        public void Subtract_CachesResult()
+        {
+            // Arrange
+            var calc = new CachedCalculator();
+            int a = 10, b = 5;
+            
+            // Act
+            var result1 = calc.Subtract(a, b);
+            int initialCacheCount = calc._cache.Count;
+            var result2 = calc.Subtract(a, b);
+            
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result1, Is.EqualTo(result2));
+                Assert.That(calc._cache, Has.Count.EqualTo(initialCacheCount));
+            });
+        }
+        
+        [Test]
+        public void Multiply_CachesResult()
+        {
+            // Arrange
+            var calc = new CachedCalculator();
+            int a = 4, b = 6;
+            
+            // Act
+            var result1 = calc.Multiply(a, b);
+            int initialCacheCount = calc._cache.Count;
+            var result2 = calc.Multiply(a, b);
+            
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result1, Is.EqualTo(result2));
+                Assert.That(calc._cache, Has.Count.EqualTo(initialCacheCount));
+            });
+        }
+        
+        [Test]
+        public void Divide_CachesResult()
+        {
+            // Arrange
+            var calc = new CachedCalculator();
+            int a = 20, b = 4;
+            
+            // Act
+            var result1 = calc.Divide(a, b);
+            int initialCacheCount = calc._cache.Count;
+            var result2 = calc.Divide(a, b);
+            
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result1, Is.EqualTo(result2));
+                Assert.That(calc._cache, Has.Count.EqualTo(initialCacheCount));
+            });
+        }
+        
+        [Test]
+        public void Factorial_CachesResult()
+        {
+            // Arrange
+            var calc = new CachedCalculator();
+            int n = 5;
+            
+            // Act
+            var result1 = calc.Factorial(n);
+            int initialCacheCount = calc._cache.Count;
+            var result2 = calc.Factorial(n);
+            
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result1, Is.EqualTo(result2));
+                Assert.That(calc._cache, Has.Count.EqualTo(initialCacheCount));
+            });
+        }
+        
+        [Test]
+        public void IsPrime_CachesResult()
+        {
+            // Arrange
+            var calc = new CachedCalculator();
+            int candidate = 11;
+            
+            // Act
+            var result1 = calc.IsPrime(candidate);
+            int initialCacheCount = calc._cache.Count;
+            var result2 = calc.IsPrime(candidate);
+            
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result1, Is.EqualTo(result2));
+                Assert.That(calc._cache, Has.Count.EqualTo(initialCacheCount));
+            });
+        }
+    
+    [Test]
+    public void Divide_ByZero_ShouldThrowException_AndNotCacheResult()
+    {
+        // Arrange
+        var calc = new CachedCalculator();
+        int a = 5, b = 0;
+
+        // Act
+        TestDelegate act = () => calc.Divide(a, b);
+
+        // Assert
+        Assert.Throws<DivideByZeroException>(act);
+        Assert.That(calc._cache, Has.Count.EqualTo(0));
+    }
+
+    [Test]
+    public void Factorial_NegativeNumber_ShouldThrowException_AndNotCacheResult()
+    {
+        // Arrange
+        var calc = new CachedCalculator();
+        int n = -5;
+
+        // Act
+        TestDelegate act = () => calc.Factorial(n);
+
+        // Assert
+        Assert.Throws<ArgumentException>(act);
+        Assert.That(calc._cache, Has.Count.EqualTo(0));
+    }
+    
+    [Test]
+    public void DifferentOperations_HaveSeparateCacheEntries()
+    {
+        // Arrange
+        var calc = new CachedCalculator();
+            
+        // Act
+        calc.Add(2, 3);
+        calc.Subtract(5, 2);
+        calc.Multiply(3, 3);
+        calc.Divide(10, 2);
+        calc.Factorial(4);
+        calc.IsPrime(7);
+            
+        // Assert
+        Assert.That(calc._cache, Has.Count.EqualTo(6));
+    }
+    
+    [Test]
+    public void GetCachedResult_ShouldReturnCachedValue()
+    {
+        // Arrange
+        var calc = new CachedCalculator();
+        int a = 5, b = 3;
+
+        // Act
+        var firstResult = calc.Add(a, b);
+        int cacheSizeAfterFirstCall = calc._cache.Count;
+        var cachedResult = calc.Add(a, b);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(cachedResult, Is.EqualTo(firstResult));
+            Assert.That(calc._cache, Has.Count.EqualTo(cacheSizeAfterFirstCall));
+        });
+    }
+
 
 
 }
