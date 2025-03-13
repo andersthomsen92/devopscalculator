@@ -34,7 +34,7 @@ jobs:
           /d:sonar.exclusions=frontend/**
           
       - name: Debug Filesystem
-        run: ls -R
+        run: ls -R  # debbuging step for meeeeee
 
       - name: Build
         run: dotnet build
@@ -115,7 +115,7 @@ jobs:
           host: ${{ vars.STAGING_SERVER_IP }}
           username: ${{ vars.STAGING_SERVER_USERNAME }}
           key: ${{ secrets.STAGING_SERVER_SSH_KEY }}
-          source: "docker-compose.yaml"
+          source: "docker-compose.yaml,db/migrations/**/*.*""
           target: dowa/
 
       - name: Run Docker Compose on staging server
@@ -127,4 +127,7 @@ jobs:
           script: |
             cd dowa
             docker compose pull
+            docker compose up -d mariadb
+            sleep 10
+            docker compose up flyway --exit-code-from flyway
             docker compose up -d
