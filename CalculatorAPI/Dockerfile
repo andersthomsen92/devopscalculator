@@ -17,12 +17,12 @@ RUN dotnet restore "CalculatorAPI/CalculatorAPI.csproj"
 # Copy the entire project and build
 COPY . .
 WORKDIR "/src/CalculatorAPI"
-RUN dotnet build "CalculatorAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "CalculatorAPI.csproj" -c "$BUILD_CONFIGURATION" -o /app/build
 
 # Publish stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "CalculatorAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "CalculatorAPI.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish /p:UseAppHost=false
 
 # Final runtime image
 FROM base AS final
