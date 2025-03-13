@@ -35,7 +35,10 @@ jobs:
           /d:sonar.coverageReportPaths="coverage-report/SonarQube.xml" \
           /d:sonar.qualitygate.wait=true \
           /d:sonar.qualitygate.timeout=300
-          /d:sonar.exclusions="/frontend/**"
+          /d:sonar.exclusions=frontend/**
+          
+      - name: Debug Filesystem
+        run: ls -R
 
       - name: Build
         run: dotnet build
