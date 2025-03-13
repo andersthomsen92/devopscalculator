@@ -7,10 +7,10 @@ services:
   mariadb:
     image: mariadb:latest
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: mydatabase
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypassword
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${DATABASE_USER}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
     ports:
       - "3306:3306"
         
@@ -24,7 +24,7 @@ services:
     command:
       - "migrate"
     environment:
-      FLYWAY_URL: jdbc:mariadb://mariadb:3306/mydatabase
-      FLYWAY_USER: myuser
-      FLYWAY_PASSWORD: mypassword
+      FLYWAY_URL: jdbc:mariadb://mariadb:3306/${DATABASE_NAME}
+      FLYWAY_USER: ${DATABASE_USER}
+      FLYWAY_PASSWORD: ${DATABASE_PASSWORD}
            
