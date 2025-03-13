@@ -115,8 +115,18 @@ jobs:
           host: ${{ vars.STAGING_SERVER_IP }}
           username: ${{ vars.STAGING_SERVER_USERNAME }}
           key: ${{ secrets.STAGING_SERVER_SSH_KEY }}
-          source: "docker-compose.yaml,db/migrations/**/*.*"
+          source: "docker-compose.yaml"
           target: dowa/
+          
+      - name: Deliver migration files to staging
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ vars.STAGING_SERVER_IP }}
+          username: ${{ vars.STAGING_SERVER_USERNAME }}
+          key: ${{ secrets.STAGING_SERVER_SSH_KEY }}
+          source: "db/migrations/**/*.*"
+          target: "dowa/db/migrations/"
+
 
       - name: Run Docker Compose on staging server
         uses: appleboy/ssh-action@v1.2.1
