@@ -126,13 +126,24 @@ jobs:
           username: ${{ vars.STAGING_SERVER_USERNAME }}
           key: ${{ secrets.STAGING_SERVER_SSH_KEY }}
           script: |
+            # Export Database credentials
             export DATABASE_ROOT_PASSWORD="${{ secrets.DATABASE_ROOT_PASSWORD }}"
             export DATABASE_NAME="${{ vars.DATABASE_NAME }}"
             export DATABASE_USER="${{ vars.DATABASE_USER }}"
             export DATABASE_PASSWORD="${{ secrets.DATABASE_PASSWORD }}"
+
             cd dowa
             docker compose pull
             docker compose up -d mariadb
-            sleep 10
+
+            # Wait for MariaDB to be fully ready
+            until nc -z -v -w30 127.0.0.1 3306; do
+              echo "Waiting for MariaDB to accept connections..."
+              sleep 5
+            done
+
+            # Run Flyway migrations
             docker compose up flyway --exit-code-from flyway
+
+            # Start all other services after migrations
             docker compose up -d
