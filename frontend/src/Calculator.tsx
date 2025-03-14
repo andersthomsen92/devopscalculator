@@ -28,9 +28,7 @@ export default function Calculator() {
             setError("Error performing calculation. Please check inputs.");
         }
     };
-
-
-
+    
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-base-200 p-6">
             <div className="card w-full max-w-md bg-base-100 shadow-xl p-6">
