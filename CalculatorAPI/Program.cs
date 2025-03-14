@@ -23,12 +23,12 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
-        policy => policy.WithOrigins("http://localhost:5174") // Your frontend URL
+        policy => policy.WithOrigins("http://localhost:5174") 
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
 
-// Configure the HTTP request pipeline.
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -37,7 +37,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Calculator API v1");
-        c.RoutePrefix = string.Empty;  // Makes Swagger UI available at root
+        c.RoutePrefix = string.Empty; 
     });
 }
 
