@@ -117,6 +117,7 @@ jobs:
           key: ${{ secrets.STAGING_SERVER_SSH_KEY }}
           source: "docker-compose.yaml,db/migrations/**/*.*"
           target: dowa/
+          rm: true
 
 
       - name: Run Docker Compose on staging server
@@ -126,35 +127,12 @@ jobs:
           username: ${{ vars.STAGING_SERVER_USERNAME }}
           key: ${{ secrets.STAGING_SERVER_SSH_KEY }}
           script: |
-              # Export Database credentials
-              export DATABASE_ROOT_PASSWORD="${{ secrets.DATABASE_ROOT_PASSWORD }}"
-              export DATABASE_NAME="${{ vars.DATABASE_NAME }}"
-              export DATABASE_USER="${{ vars.DATABASE_USER }}"
-              export DATABASE_PASSWORD="${{ secrets.DATABASE_PASSWORD }}"
-
-              # Navigate to the project directory
-              cd dowa
-
-              # Pull the latest images
-              docker compose pull
-
-              # Start the MariaDB service
-              docker compose up -d mariadb
-
-              # Wait for MariaDB to be fully ready
-              until docker ps --filter "name=dowa-mariadb-1" --format "{{.Names}}" | grep -q dowa-mariadb-1; do
-              echo "Waiting for MariaDB container to start..."
-              sleep 5
-              done
-
-              # Wait for MariaDB to accept connections
-              until docker exec dowa-mariadb-1 mysqladmin ping --host=localhost --user=root --password="${DATABASE_ROOT_PASSWORD}" --silent; do
-              echo "Waiting for MariaDB to accept connections..."
-              sleep 5
-              done
-
-              # Run Flyway migrations
-              docker compose up flyway --exit-code-from flyway
-
-              # Start all other services after migrations
-              docker compose up -d
+            export DATABASE_ROOT_PASSWORD="${{ secrets.DATABASE_ROOT_PASSWORD }}"
+            export DATABASE_NAME="${{ vars.DATABASE_NAME }}"
+            export DATABASE_USER="${{ vars.DATABASE_USER }}"
+            export DATABASE_PASSWORD="${{ secrets.DATABASE_PASSWORD }}"
+            cd dowa
+            docker compose pull
+            docker compose up -d mariadb
+            sleep 10
+            docker compose up flyway --exit-code-from flyway
