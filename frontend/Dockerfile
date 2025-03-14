@@ -1,0 +1,6 @@
+﻿DATABASE_NAME = mydatabase
+DATABASE_USER = myuser
+DATABASE_PASSWORD = mypassword
+DATABASE_ROOT_PASSWORD = root
+DATABASE_PORT = 3306
+DATABASE_HOST = what is this?!
