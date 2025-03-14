@@ -122,8 +122,6 @@ jobs:
           source: "docker-compose.yaml,db/migrations/**/*.*"
           target: dowa/
           rm: true
-        retries: 3
-        retry_delay: 10
 
       - name: Run Docker Compose on staging server
         uses: appleboy/ssh-action@v1.2.1
