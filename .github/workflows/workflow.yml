@@ -108,11 +108,6 @@ jobs:
           generateReleaseNotes: true
           body: |
 
-      - name: Debug SCP Action
-        run: |
-          echo "Checking file existence:"
-          ls -lh docker-compose.yaml db/migrations/**/*.*
-
       - name: Deliver Docker Compose file to staging
         uses: appleboy/scp-action@v0.1.7
         with:
