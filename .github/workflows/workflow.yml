@@ -116,7 +116,7 @@ jobs:
           key: ${{ secrets.STAGING_SERVER_SSH_KEY }}
           source: "docker-compose.yaml,db/migrations/**/*.*"
           target: dowa/
-          rm: true
+          # rm: true doesnt work for me
 
       - name: Run Docker Compose on staging server
         uses: appleboy/ssh-action@v1.2.1
