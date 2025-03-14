@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-    
 
 jobs:
   integration:
@@ -14,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetch all history for accurate code analysis
+          fetch-depth: 0
 
       - name: Install required tools
         run: |
@@ -32,9 +31,9 @@ jobs:
           /d:sonar.qualitygate.wait=true \
           /d:sonar.qualitygate.timeout=300 \
           /d:sonar.exclusions=frontend/**
-          
+
       - name: Debug Filesystem
-        run: ls -R  # debbuging step for meeeeee
+        run: ls -R
 
       - name: Build
         run: dotnet build
@@ -43,7 +42,7 @@ jobs:
         run: dotnet test --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger "trx;LogFileName=test_results.trx"
 
       - name: List files in TestResults folder
-        run: ls -R ./TestResults  # Debugging step for me
+        run: ls -R ./TestResults
 
       - name: Generate report
         run: |
@@ -68,8 +67,8 @@ jobs:
 
   delivery:
     runs-on: ubuntu-latest
-    needs: integration # Ensures delivery only runs if integration succeeds
-    
+    needs: integration
+
     permissions:
       contents: write
       packages: write
@@ -101,13 +100,18 @@ jobs:
             -f CalculatorAPI/Dockerfile \.
 
           docker push ghcr.io/${{ github.repository_owner }}/devopscalculator --all-tags
-      
+
       - name: Create release notes
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.semver-app.outputs.version }}
           generateReleaseNotes: true
           body: |
+
+      - name: Debug SCP Action
+        run: |
+          echo "Checking file existence:"
+          ls -lh docker-compose.yaml db/migrations/**/*.*
 
       - name: Deliver Docker Compose file to staging
         uses: appleboy/scp-action@v0.1.7
@@ -118,7 +122,8 @@ jobs:
           source: "docker-compose.yaml,db/migrations/**/*.*"
           target: dowa/
           rm: true
-
+        retries: 3
+        retry_delay: 10
 
       - name: Run Docker Compose on staging server
         uses: appleboy/ssh-action@v1.2.1
