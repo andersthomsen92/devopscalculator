@@ -168,7 +168,7 @@ jobs:
           #  docker compose up flyway --exit-code-from flyway
           #  docker compose up -d
           
-    k6-load-testing:
+      -name: k6-load-testing
         runs-on: ubuntu-latest
         steps:
           - name: Checkout code
