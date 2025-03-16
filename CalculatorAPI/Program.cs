@@ -3,14 +3,14 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services
 builder.Services.AddControllers();
 
-// Register services
+// Register Calculator Services
 builder.Services.AddSingleton<SimpleCalculator>();
 builder.Services.AddSingleton<CachedCalculator>();
 
-// Add Swagger services
+// Add Swagger (Swashbuckle)
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -20,6 +20,7 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+// Configure CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
@@ -28,22 +29,23 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader());
 });
 
-
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+// ✅ Always enable Swagger (no environment check)
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Calculator API v1");
-        c.RoutePrefix = string.Empty; 
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Calculator API v1");
+    c.RoutePrefix = string.Empty;
+});
 
+// Security & CORS
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 app.UseAuthorization();
+
+// Controllers
 app.MapControllers();
 
+// Start the application
 app.Run();
