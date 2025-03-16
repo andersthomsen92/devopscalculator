@@ -168,26 +168,26 @@ jobs:
           #  docker compose up flyway --exit-code-from flyway
           #  docker compose up -d
           
-      -name: k6-load-testing
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout code
-            uses: actions/checkout@v4
-            with:
-              fetch-depth: 0
+  k6-load-testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       
-          # K6 Load Testing steps
-          - name: Setup K6
-            uses: grafana/setup-k6-action@v1
-      
-          - name: Modify k6 script to use staging URL
-            run: |
-              # Create a temp script with the staging URL
-              cp tests/spike-test.js tests/temp-spike-test.js
-              sed -i "s|http://localhost:8080|http://${{ vars.STAGING_SERVER_IP }}:8080|g" tests/temp-spike-test.js
-              cat tests/temp-spike-test.js
-      
-          - name: Run k6 load test against staging
-            uses: grafana/run-k6-action@v1
-            with:
-              path: tests/temp-spike-test.js
+      # K6 Load Testing steps
+      - name: Setup K6
+        uses: grafana/setup-k6-action@v1
+
+      - name: Modify k6 script to use staging URL
+        run: |
+          # Create a temp script with the staging URL
+          cp tests/spike-test.js tests/temp-spike-test.js
+          sed -i "s|http://localhost:8080|http://${{ vars.STAGING_SERVER_IP }}:8080|g" tests/temp-spike-test.js
+          cat tests/temp-spike-test.js
+
+      - name: Run k6 load test against staging
+        uses: grafana/run-k6-action@v1
+        with:
+          path: tests/temp-spike-test.js
