@@ -9,14 +9,11 @@ export default function Calculator() {
     const [result, setResult] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    
-
     const handleCalculate = async () => {
         setError(null);
         setResult(null);
 
         try {
-            
             const response = await http.api.calculatorCreate(calculatorType, operation, { a, b });
 
             // Type assertion to assume the response has a 'result' property
@@ -28,7 +25,7 @@ export default function Calculator() {
             setError("Error performing calculation. Please check inputs.");
         }
     };
-    
+
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-base-200 p-6">
             <div className="card w-full max-w-md bg-base-100 shadow-xl p-6">
@@ -36,8 +33,9 @@ export default function Calculator() {
 
                 {/* Calculator Type Selector */}
                 <div className="form-control my-4">
-                    <label className="label">Choose Calculator Type:</label>
+                    <label className="label" htmlFor="calculatorType">Choose Calculator Type:</label>
                     <select
+                        id="calculatorType"
                         className="select select-bordered"
                         value={calculatorType}
                         onChange={(e) => setCalculatorType(e.target.value as "simple" | "cached")}
@@ -49,8 +47,9 @@ export default function Calculator() {
 
                 {/* Operation Selector */}
                 <div className="form-control">
-                    <label className="label">Choose Operation:</label>
+                    <label className="label" htmlFor="operation">Choose Operation:</label>
                     <select
+                        id="operation"
                         className="select select-bordered"
                         value={operation}
                         onChange={(e) => setOperation(e.target.value)}
@@ -66,8 +65,9 @@ export default function Calculator() {
 
                 {/* Number Inputs */}
                 <div className="form-control my-4">
-                    <label className="label">Enter Number A:</label>
+                    <label className="label" htmlFor="numberA">Enter Number A:</label>
                     <input
+                        id="numberA"
                         type="number"
                         className="input input-bordered"
                         value={a}
@@ -77,8 +77,9 @@ export default function Calculator() {
 
                 {operation !== "factorial" && operation !== "isPrime" && (
                     <div className="form-control">
-                        <label className="label">Enter Number B:</label>
+                        <label className="label" htmlFor="numberB">Enter Number B:</label>
                         <input
+                            id="numberB"
                             type="number"
                             className="input input-bordered"
                             value={b ?? ""}
@@ -88,14 +89,14 @@ export default function Calculator() {
                 )}
 
                 {/* Calculate Button */}
-                <button className="btn btn-primary mt-4" onClick={handleCalculate}>
+                <button id="calculateButton" className="btn btn-primary mt-4" onClick={handleCalculate}>
                     Calculate
                 </button>
 
                 {/* Result Display */}
                 {result !== null && (
                     <div className="alert alert-success mt-4">
-                        <span>Result: {result}</span>
+                        <span id="resultDisplay">Result: {result}</span>
                     </div>
                 )}
 
