@@ -10,7 +10,7 @@ export const options = {
     ],
 };
 
-const API_BASE_URL = 'http://localhost:5000/api/calculator';
+const API_BASE_URL = 'http://79.76.54.224:8080/api/calculator';
 
 export default function () {
     const payload = JSON.stringify({ A: 10, B: 5 });
