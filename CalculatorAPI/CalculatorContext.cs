@@ -1,6 +1,9 @@
-﻿public class CalculatorContext : DbContext
+﻿using Microsoft.EntityFrameworkCore;
+using Calculator.Models;
+
+public class CalculatorContext : DbContext
 {
     public CalculatorContext(DbContextOptions<CalculatorContext> options) : base(options) { }
 
-    public DbSet<CalculationHistory> History { get; set; }
+    public DbSet<History> History { get; set; }
 }
