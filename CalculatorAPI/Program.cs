@@ -1,7 +1,6 @@
 using Calculator;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,31 +35,15 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader()
             .AllowCredentials();
     });
-}); 
-
+});
 
 Console.WriteLine("Connection string: " + builder.Configuration.GetConnectionString("CalculatorDb"));
-     
-builder.Services.AddDbContext<CalculatorContext>(options => 
+
+builder.Services.AddDbContext<CalculatorContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("CalculatorDb"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("CalculatorDb"))
     ));
-
-
-
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080"; 
-var url = $"http://0.0.0.0:{port}";
-
-/*
-// Fetch connection string from environment variable (fallback to appsettings.json)
-var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") 
-                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
-
-// Register Database Context (Example using Entity Framework)
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-    */
 
 var app = builder.Build();
 
