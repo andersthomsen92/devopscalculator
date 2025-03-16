@@ -21,11 +21,7 @@ jobs:
           dotnet tool install -g dotnet-sonarscanner
           dotnet tool install -g dotnet-reportgenerator-globaltool
           dotnet tool install -g dotnet-stryker
-          
-      - name: Copy SQL file for database initialization
-        run: |
-          cp ./init-db.sql ./dowa/init-db.sql    
-      
+                
       - name: Start Static Code Analysis
         run: |
           dotnet sonarscanner begin \
@@ -147,7 +143,7 @@ jobs:
           host: ${{ vars.STAGING_SERVER_IP }}
           username: ${{ vars.STAGING_SERVER_USERNAME }}
           key: ${{ secrets.STAGING_SERVER_SSH_KEY }}
-          source: "docker-compose.yaml,.env,db/migrations/**/*.*,nginx.conf"
+          source: "docker-compose.yaml,.env,db/migrations/**/*.*,nginx.conf,init-db.sql"
           target: dowa/
 
 
