@@ -153,8 +153,8 @@ jobs:
           key: ${{ secrets.STAGING_SERVER_SSH_KEY }}
           script: |
             cd dowa
-            docker compose -f docker-compose-staging.yaml pull
-            docker compose -f docker-compose-staging.yaml up -d
+            docker compose -f docker-compose.yaml pull
+            docker compose -f docker-compose.yaml up -d
             
             
           #  cd dowa
