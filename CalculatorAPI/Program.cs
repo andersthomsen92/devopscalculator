@@ -24,10 +24,29 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
-        policy => policy.WithOrigins("http://localhost:5174") 
+        policy => policy.WithOrigins(
+                "http://localhost:5174",
+                "http://79.76.54.224",
+                "http://79.76.54.224:80",
+                "http://79.76.54.224:8000" ) 
             .AllowAnyMethod()
-            .AllowAnyHeader());
+            .AllowAnyHeader()
+            .AllowCredentials();
 });
+
+
+Console.WriteLine("Connection string: " + builder.Configuration.GetConnectionString("CalculatorDb"));
+     
+builder.Services.AddDbContext<CalculatorContext>(options => 
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("CalculatorDb"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("CalculatorDb"))
+    ));
+
+
+
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080"; 
+var url = $"http://0.0.0.0:{port}";
 
 /*
 // Fetch connection string from environment variable (fallback to appsettings.json)
@@ -41,7 +60,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 var app = builder.Build();
 
-// ✅ Always enable Swagger (no environment check)
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
