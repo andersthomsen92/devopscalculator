@@ -1,5 +1,7 @@
 using Calculator;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,16 +25,18 @@ builder.Services.AddSwaggerGen(options =>
 // Configure CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend",
-        policy => policy.WithOrigins(
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(
                 "http://localhost:5174",
                 "http://79.76.54.224",
                 "http://79.76.54.224:80",
-                "http://79.76.54.224:8000" ) 
+                "http://79.76.54.224:8000")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
-});
+    });
+}); 
 
 
 Console.WriteLine("Connection string: " + builder.Configuration.GetConnectionString("CalculatorDb"));
