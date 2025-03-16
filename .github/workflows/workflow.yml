@@ -216,12 +216,12 @@ jobs:
       - name: Modify TestCafe script to use staging URL with forced HTTP
         run: |
           # Create a temp script with the staging URL
-          cp Tests/testcafe.js Tests/temp-testcafe.js
+          cp Tests/addition-test.js Tests/temp-addition-test
 
           # Update the URL to use the staging server with explicit HTTP protocol and trailing slash
-          sed -i "s|http://http://79.76.54.224//|http://${{ vars.STAGING_SERVER_IP }}/|g" Tests/temp-testcafe.js
+          sed -i "s|http://http://79.76.54.224//|http://${{ vars.STAGING_SERVER_IP }}/|g" Tests/temp-addition-test
 
-          cat Tests/temp-testcafe.js
+          cat Tests/temp-addition-test
 
       - name: Run TestCafe tests with forced HTTP protocol
-        run: testcafe "chrome:headless" Tests/temp-testcafe.js --skip-js-errors --page-request-timeout 120000 --selector-timeout 30000 --disable-native-automation --disable-http2 --speed 0.5 --assertion-timeout 30000 --quarantine
+        run: testcafe "chrome:headless" Tests/temp-addition-test --skip-js-errors --page-request-timeout 120000 --selector-timeout 30000 --disable-native-automation --disable-http2 --speed 0.5 --assertion-timeout 30000 --quarantine
