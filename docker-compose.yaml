@@ -30,6 +30,7 @@ services:
       FLYWAY_URL: jdbc:mariadb://mariadb:3306/${DATABASE_NAME}  #Does this also work as a connectionstring?
       FLYWAY_USER: ${DATABASE_USER}
       FLYWAY_PASSWORD: ${DATABASE_PASSWORD}
+      FLYWAY_CONNECT_RETRIES: 5
       FLYWAY_LOCATIONS: filesystem:/flyway/sql
     volumes:
       - ./db/migrations:/flyway/sql
