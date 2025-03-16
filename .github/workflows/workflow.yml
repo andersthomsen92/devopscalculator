@@ -123,15 +123,25 @@ jobs:
             http://ghcr.io/${{ github.repository }}:${{ steps.semver-app.outputs.version }} |
             
       - name: Display Version
-        run: echo "Generated version is ${{ steps.semver-app.outputs.version }}"      
+        run: echo "Generated version is ${{ steps.semver-app.outputs.version }}"
 
+      - name: Create .env file for staging
+        run: |
+          cat > .env << EOL
+          MYSQL_ROOT_PASSWORD=${{ secrets.DATABASE_ROOT_PASSWORD }}
+          MYSQL_DATABASE=${{ vars.DATABASE_NAME }}
+          MYSQL_USER=${{ vars.DATABASE_USER }}
+          MYSQL_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+          EOL
+          
+          
       - name: Deliver Docker Compose file to staging
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ vars.STAGING_SERVER_IP }}
           username: ${{ vars.STAGING_SERVER_USERNAME }}
           key: ${{ secrets.STAGING_SERVER_SSH_KEY }}
-          source: "docker-compose.yaml,db/migrations/**/*.*,nginx.conf"
+          source: "docker-compose.yaml,db/migrations/**,nginx.conf"
           target: dowa/
 
 
@@ -142,14 +152,15 @@ jobs:
           username: ${{ vars.STAGING_SERVER_USERNAME }}
           key: ${{ secrets.STAGING_SERVER_SSH_KEY }}
           script: |
-            export DATABASE_ROOT_PASSWORD="${{ secrets.DATABASE_ROOT_PASSWORD }}"
-            export DATABASE_NAME="${{ vars.DATABASE_NAME }}"
-            export DATABASE_USER="${{ vars.DATABASE_USER }}"
-            export DATABASE_PASSWORD="${{ secrets.DATABASE_PASSWORD }}"
             cd dowa
-            docker compose pull
-            docker compose up -d mariadb
-            sleep 10
-            docker compose up flyway --exit-code-from flyway
-            docker compose up -d
+            docker compose -f docker-compose-staging.yaml pull
+            docker compose -f docker-compose-staging.yaml up -d
+            
+            
+          #  cd dowa
+          #  docker compose pull
+          #  docker compose up -d mariadb
+          #  sleep 10
+          #  docker compose up flyway --exit-code-from flyway
+          #  docker compose up -d
 
