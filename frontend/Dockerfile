@@ -3,7 +3,7 @@ FROM node:20 AS build
 WORKDIR /app
 COPY frontend/package*.json ./
 RUN npm ci
-COPY client/ ./
+COPY frontend/ ./
 RUN npm run build -- --mode production
 
 FROM nginx:alpine
