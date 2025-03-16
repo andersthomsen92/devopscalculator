@@ -128,10 +128,10 @@ jobs:
       - name: Create .env file for staging
         run: |
           cat > .env << EOL
-          MYSQL_ROOT_PASSWORD=${{ secrets.DATABASE_ROOT_PASSWORD }}
-          MYSQL_DATABASE=${{ vars.DATABASE_NAME }}
-          MYSQL_USER=${{ vars.DATABASE_USER }}
-          MYSQL_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+          DATABASE_ROOT_PASSWORD=${{ secrets.DATABASE_ROOT_PASSWORD }}
+          DATABASE_NAME=${{ vars.DATABASE_NAME }}
+          DATABASE_USER=${{ vars.DATABASE_USER }}
+          DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
           EOL
           
           
