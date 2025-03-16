@@ -1,7 +1,7 @@
 ﻿# client/Dockerfile
 FROM node:20 AS build
 WORKDIR /app
-COPY client/package*.json ./
+COPY frontend/package*.json ./
 RUN npm ci
 COPY client/ ./
 RUN npm run build -- --mode production
