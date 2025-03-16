@@ -107,7 +107,13 @@ jobs:
         with:
           tag: ${{ steps.semver-app.outputs.version }}
           generateReleaseNotes: true
+          allowUpdates: true
           body: |
+            This release includes the following container image:
+            http://ghcr.io/${{ github.repository }}:${{ steps.semver-app.outputs.version }} |
+            
+      - name: Display Version
+        run: echo "Generated version is ${{ steps.semver-app.outputs.version }}"      
 
       - name: Deliver Docker Compose file to staging
         uses: appleboy/scp-action@v0.1.7
