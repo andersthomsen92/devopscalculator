@@ -16,7 +16,7 @@ export default function Calculator() {
         setResult(null);
 
         try {
-            // Correct URL format: /api/calculator/{calculatorType}/{operation}
+            
             const response = await http.api.calculatorCreate(calculatorType, operation, { a, b });
 
             // Type assertion to assume the response has a 'result' property
