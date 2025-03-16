@@ -1,5 +1,5 @@
 ﻿# Step 1: Build your frontend application
-FROM node:20-alpine16.0 as build
+FROM node:20-alpine as build
 
 WORKDIR /app
 
