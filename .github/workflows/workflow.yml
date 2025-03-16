@@ -155,15 +155,7 @@ jobs:
             cd dowa
             docker compose -f docker-compose.yaml pull
             docker compose -f docker-compose.yaml up -d      
-            
-      - name: Echo Secrets and Variables
-        run: |
-          echo "DATABASE_ROOT_PASSWORD=${{ secrets.DATABASE_ROOT_PASSWORD }}"
-          echo "DATABASE_NAME=${{ vars.DATABASE_NAME }}"
-          echo "DATABASE_USER=${{ vars.DATABASE_USER }}"
-          echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}"      
-
-                 
+                             
       #- name: Wait for services to be ready
      #   run: sleep 30      
             
