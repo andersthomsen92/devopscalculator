@@ -101,6 +101,16 @@ jobs:
             -f CalculatorAPI/Dockerfile \.
 
           docker push ghcr.io/${{ github.repository_owner }}/devopscalculator --all-tags
+          
+          
+      - name: Build and Push Docker image for frontend
+        run: |
+          docker build \
+            -t ghcr.io/${{ github.repository_owner }}/devopscalculator:staging \
+            -t ghcr.io/${{ github.repository_owner }}/devopscalculator-frontend:${{ steps.semver-app.outputs.version }} \
+            -f frontend/Dockerfile \.
+
+          docker push ghcr.io/${{ github.repository_owner }}/devopscalculator-frontend --all-tags  
       
       - name: Create release notes
         uses: ncipollo/release-action@v1
@@ -121,7 +131,7 @@ jobs:
           host: ${{ vars.STAGING_SERVER_IP }}
           username: ${{ vars.STAGING_SERVER_USERNAME }}
           key: ${{ secrets.STAGING_SERVER_SSH_KEY }}
-          source: "docker-compose.yaml,db/migrations/**/*.*"
+          source: "docker-compose.yaml,db/migrations/**/*.*,nginx.conf"
           target: dowa/
 
 

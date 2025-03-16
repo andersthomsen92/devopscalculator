@@ -6,6 +6,16 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__CalculatorDb: Server=mariadb;Database=${DATABASE_NAME};User=${DATABASE_USER};Password=${DATABASE_PASSWORD};
+      
+      
+  frontend:
+    image: ghcr.io/andersthomsen92/devopscalculator-frontend:staging
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    volumes:
+      - ./clean-nginx.conf:/etc/nginx/nginx.conf    
   
   mariadb:
     image: mariadb:latest
