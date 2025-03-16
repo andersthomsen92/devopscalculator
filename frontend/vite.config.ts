@@ -1,18 +1,11 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
+// https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    NodeGlobalsPolyfillPlugin({
-      buffer: true,
-      process: true,
-    }),
-  ],
-  resolve: {
-    alias: {
-      crypto: 'crypto-browserify',
-    },
+  plugins: [react()],
+  server: {
+    port: 3001,
   },
-});
+  base: '/', // Replace '/' with your actual subdirectory path if needed
+})
