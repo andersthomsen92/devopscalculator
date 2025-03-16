@@ -34,6 +34,4 @@ services:
     volumes:
       - ./db/migrations:/flyway/sql
     command: migrate
-
-volumes:
-  mariadb_data:         
+   
