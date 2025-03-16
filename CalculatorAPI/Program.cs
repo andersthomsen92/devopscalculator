@@ -29,6 +29,7 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader());
 });
 
+/*
 // Fetch connection string from environment variable (fallback to appsettings.json)
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") 
                        ?? builder.Configuration.GetConnectionString("DefaultConnection");
@@ -36,6 +37,7 @@ var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"
 // Register Database Context (Example using Entity Framework)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    */
 
 var app = builder.Build();
 
