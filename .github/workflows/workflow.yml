@@ -170,6 +170,7 @@ jobs:
           
   k6-load-testing:
     runs-on: ubuntu-latest
+    needs: [ delivery ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -191,4 +192,36 @@ jobs:
         uses: grafana/run-k6-action@v1
         with:
           path: Tests/temp-spike-test.js
+          
+          
 
+  E2E-testing:
+    needs: [ delivery ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # E2E Testing with TestCafe
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+
+      - name: Install TestCafe
+        run: npm install -g testcafe
+
+      - name: Modify TestCafe script to use staging URL with forced HTTP
+        run: |
+          # Create a temp script with the staging URL
+          cp Tests/testcafe.js Tests/temp-testcafe.js
+
+          # Update the URL to use the staging server with explicit HTTP protocol and trailing slash
+          sed -i "s|http://158.179.201.182/|http://${{ vars.STAGING_SERVER_IP }}/|g" Tests/temp-testcafe.js
+
+          cat Tests/temp-testcafe.js
+
+      - name: Run TestCafe tests with forced HTTP protocol
+        run: testcafe "chrome:headless" Tests/temp-testcafe.js --skip-js-errors --page-request-timeout 120000 --selector-timeout 30000 --disable-native-automation --disable-http2 --speed 0.5 --assertion-timeout 30000 --quarantine
