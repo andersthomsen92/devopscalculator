@@ -6,9 +6,6 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__CalculatorDb: Server=mariadb;Database=${DATABASE_NAME};User=${DATABASE_USER};Password=${DATABASE_PASSWORD};
-    depends_on:
-      mariadb:
-        condition: service_healthy  
       
       
   frontend:
@@ -32,13 +29,6 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
       - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-      interval: 30s
-      retries: 5
-      start_period: 10s
-      timeout: 10s  
-
         
   flyway:
     image: flyway/flyway:latest
