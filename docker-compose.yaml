@@ -21,29 +21,32 @@ services:
   
   mariadb:
     image: mariadb:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DATABASE_NAME}
-      MYSQL_USER: ${DATABASE_USER}
-      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
-    volumes:
-      - mariadb_data:/var/lib/mysql
+    container_name: mariadb
     ports:
       - "3306:3306"
-        
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mariadb-data:/var/lib/mysql
+  
   flyway:
     image: flyway/flyway:latest
     depends_on:
       - mariadb
     environment:
-      FLYWAY_URL: jdbc:mariadb://mariadb:3306/${DATABASE_NAME}
-      FLYWAY_USER: ${DATABASE_USER}
-      FLYWAY_PASSWORD: ${DATABASE_PASSWORD}
+      FLYWAY_URL: jdbc:mariadb://mariadb:3306/${MYSQL_DATABASE}
+      FLYWAY_USER: ${MYSQL_USER}
+      FLYWAY_PASSWORD: ${MYSQL_PASSWORD}
       FLYWAY_CONNECT_RETRIES: 5
       FLYWAY_LOCATIONS: filesystem:/flyway/sql
     volumes:
       - ./db/migrations:/flyway/sql
     command: migrate
+
+volumes:
 
 volumes:
   mariadb_data:         
