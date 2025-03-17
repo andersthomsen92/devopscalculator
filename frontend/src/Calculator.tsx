@@ -1,5 +1,5 @@
-import {useState} from "react";
-import {http} from "./http.ts";
+import { useState, useEffect } from "react";
+import { http } from "./http.ts";
 
 export default function Calculator() {
     const [calculatorType, setCalculatorType] = useState<"simple" | "cached">("simple");
@@ -8,6 +8,7 @@ export default function Calculator() {
     const [b, setB] = useState<number | null>(null);
     const [result, setResult] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [history, setHistory] = useState<any[]>([]); 
 
     const handleCalculate = async () => {
         setError(null);
@@ -15,16 +16,29 @@ export default function Calculator() {
 
         try {
             const response = await http.api.calculatorCreate(calculatorType, operation, { a, b });
-
-            // Type assertion to assume the response has a 'result' property
             const result = (response as unknown as { data: { result: number } }).data.result;
 
-            // Update the result state
             setResult(result);
+
+            // After calculation, fetch the history
+            fetchHistory();
         } catch (err) {
             setError("Error performing calculation. Please check inputs.");
         }
     };
+
+    const fetchHistory = async () => {
+        try {
+            const response = await http.api.calculatorHistoryList();
+            setHistory(response.data);
+        } catch (err) {
+            console.error("Error fetching history", err);
+        }
+    };
+
+    useEffect(() => {
+        fetchHistory();
+    }, []);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-base-200 p-6">
@@ -106,6 +120,18 @@ export default function Calculator() {
                         <span>{error}</span>
                     </div>
                 )}
+
+                {/* Calculation History */}
+                <div className="mt-8">
+                    <h2 className="text-xl font-bold">History</h2>
+                    <ul className="mt-4">
+                        {history.map((entry, index) => (
+                            <li key={index} className="p-2">
+                                <div>{entry.text}</div>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
         </div>
     );

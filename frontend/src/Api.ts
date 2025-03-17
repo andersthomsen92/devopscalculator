@@ -176,5 +176,19 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         type: ContentType.Json,
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags Calculator
+     * @name CalculatorHistoryList
+     * @request GET:/api/calculator/history
+     */
+    calculatorHistoryList: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/calculator/history`,
+        method: "GET",
+        ...params,
+      }),
   };
 }
