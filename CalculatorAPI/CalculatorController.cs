@@ -41,7 +41,29 @@ public class CalculatorController : ControllerBase
             _ => throw new ArgumentException("Invalid operation")
         };
 
+        // Create the calculation text string
+        string calculationText = operation switch
+        {
+            "add" => $"{request.A} + {request.B ?? 0} = {result}",
+            "subtract" => $"{request.A} - {request.B ?? 0} = {result}",
+            "multiply" => $"{request.A} * {request.B ?? 0} = {result}",
+            "divide" => $"{request.A} / {request.B ?? 1} = {result}",
+            "factorial" => $"{request.A}! = {result}",
+            "isPrime" => $"{request.A} is prime? {result}",
+            _ => throw new ArgumentException("Invalid operation")
+        };
 
+        // Save the calculation to the database
+        var history = new History
+        {
+            Text = calculationText,
+            CreatedAt = DateTime.UtcNow
+        };
+        _context.History.Add(history);
+        _context.SaveChanges();
+
+        // Return the result as an API response
+        return Ok(new { result });
     }
     
     [HttpGet("history")]
