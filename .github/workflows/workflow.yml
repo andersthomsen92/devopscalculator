@@ -224,4 +224,4 @@ jobs:
           cat Tests/temp-addition-test
 
       - name: Run TestCafe tests with forced HTTP protocol
-        run: testcafe "chrome:headless" Tests/temp-addition-test --skip-js-errors --page-request-timeout 120000 --selector-timeout 30000 --disable-native-automation --disable-http2 --speed 0.5 --assertion-timeout 30000 --quarantine
+        run: testcafe "firefox:headless" Tests/temp-addition-test --skip-js-errors --page-request-timeout 120000 --selector-timeout 30000 --disable-native-automation --disable-http2 --speed 0.5 --assertion-timeout 30000 --quarantine
