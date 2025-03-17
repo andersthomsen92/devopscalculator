@@ -29,7 +29,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
-      - mariadb-data:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
   
   flyway:
     image: flyway/flyway:latest
