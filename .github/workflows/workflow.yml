@@ -127,20 +127,21 @@ jobs:
         
       - name: Export Database Environment Variables
         run: |
-            echo "MYSQL_DATABASE=${{ secrets.DATABASE_NAME }}" >> $GITHUB_ENV
-            echo "MYSQL_USER=${{ secrets.DATABASE_USER }}" >> $GITHUB_ENV
-            echo "MYSQL_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> $GITHUB_ENV
-            echo "MYSQL_ROOT_PASSWORD=${{ secrets.DATABASE_ROOT_PASSWORD }}" >> $GITHUB_ENV
-      
-      
+          echo "MYSQL_DATABASE=${{ secrets.DATABASE_NAME }}" >> $GITHUB_ENV
+          echo "MYSQL_USER=${{ secrets.DATABASE_USER }}" >> $GITHUB_ENV
+          echo "MYSQL_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> $GITHUB_ENV
+          echo "MYSQL_ROOT_PASSWORD=${{ secrets.DATABASE_ROOT_PASSWORD }}" >> $GITHUB_ENV
+
+
       - name: Create .env file for staging
         run: |
-          cat > .env << EOL
-          MYSQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
-          MYSQL_DATABASE=${DATABASE_NAME}
-          MYSQL_USER=${DATABASE_USER}
-          MYSQL_PASSWORD=${DATABASE_PASSWORD}
+          cat > .env <<EOL
+          MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+          MYSQL_DATABASE=$MYSQL_DATABASE
+          MYSQL_USER=$MYSQL_USER
+          MYSQL_PASSWORD=$MYSQL_PASSWORD
           EOL
+
           
       - name: Deliver Docker Compose file to staging
         uses: appleboy/scp-action@v0.1.7
