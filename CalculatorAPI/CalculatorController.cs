@@ -66,7 +66,6 @@ public class CalculatorController : ControllerBase
         return Ok(new { result });
     }
     
-    
     [HttpGet("history")]
     public async Task<IActionResult> GetHistory()
     {

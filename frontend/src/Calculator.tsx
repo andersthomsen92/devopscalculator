@@ -8,7 +8,7 @@ export default function Calculator() {
     const [b, setB] = useState<number | null>(null);
     const [result, setResult] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [history, setHistory] = useState<any[]>([]); 
+    const [history, setHistory] = useState<any[]>([]);
 
     const handleCalculate = async () => {
         setError(null);
