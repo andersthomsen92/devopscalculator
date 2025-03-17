@@ -30,6 +30,7 @@ export default function Calculator() {
     const fetchHistory = async () => {
         try {
             const response = await http.api.calculatorHistoryList();
+            // @ts-ignore
             setHistory(response.data);
         } catch (err) {
             console.error("Error fetching history", err);
