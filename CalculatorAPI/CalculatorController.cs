@@ -41,7 +41,7 @@ public class CalculatorController : ControllerBase
             _ => throw new ArgumentException("Invalid operation")
         };
 
-        /*// Create the calculation text string
+        // Create the calculation text string
         string calculationText = operation switch
         {
             "add" => $"{request.A} + {request.B ?? 0} = {result}",
@@ -60,7 +60,7 @@ public class CalculatorController : ControllerBase
             CreatedAt = DateTime.UtcNow
         };
         _context.History.Add(history);
-        _context.SaveChanges();*/
+        _context.SaveChanges();
 
         // Return the result as an API response
         return Ok(new { result });
