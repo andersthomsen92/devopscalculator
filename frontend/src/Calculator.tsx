@@ -16,16 +16,17 @@ export default function Calculator() {
 
         try {
             const response = await http.api.calculatorCreate(calculatorType, operation, { a, b });
-            const result = (response as unknown as { data: { result: number } }).data.result;
 
-            setResult(result);
+            // Extract the result from the response
+            const responseData = response.data as unknown as { result: number };
+            setResult(responseData.result);  // Update state with the result
 
-            // After calculation, fetch the history
-            fetchHistory();
+            await fetchHistory();  // Refresh history
         } catch (err) {
             setError("Error performing calculation. Please check inputs.");
         }
     };
+
 
     const fetchHistory = async () => {
         try {

@@ -167,3 +167,60 @@ jobs:
           #  docker compose up flyway --exit-code-from flyway
           #  docker compose up -d
           
+  k6-load-testing:
+    runs-on: ubuntu-latest
+    needs: [delivery]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      # K6 Load Testing steps
+      - name: Setup K6
+        uses: grafana/setup-k6-action@v1
+
+      - name: Modify k6 script to use staging URL
+        run: |
+          # Create a temp script with the staging URL
+          cp Tests/spike-test.js Tests/temp-spike-test.js
+          sed -i "s|http://localhost:8080|http://${{ vars.STAGING_SERVER_IP }}:8080|g" Tests/temp-spike-test.js
+          cat Tests/temp-spike-test.js
+
+      - name: Run k6 load test against staging
+        uses: grafana/run-k6-action@v1
+        with:
+          path: Tests/temp-spike-test.js
+  
+  
+  
+  E2E-testing:
+    needs: [delivery]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # E2E Testing with TestCafe
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+
+      - name: Install TestCafe
+        run: npm install -g testcafe
+
+      - name: Modify TestCafe script to use staging URL with forced HTTP
+        run: |
+          # Create a temp script with the staging URL
+          cp Tests/addition-test.js Tests/temp-addition-test.js
+
+          # Update the URL to use the staging server with explicit HTTP protocol and trailing slash
+          sed -i "s|http://http://79.76.54.224//|http://${{ vars.STAGING_SERVER_IP }}/|g" Tests/temp-addition-test.js
+
+          cat Tests/temp-addition-test.js
+
+      - name: Run TestCafe tests with forced HTTP protocol
+        run: testcafe "firefox:headless" Tests/temp-addition-test.js --skip-js-errors --page-request-timeout 120000 --selector-timeout 30000 --disable-native-automation --disable-http2 --speed 0.5 --assertion-timeout 30000 --quarantine
