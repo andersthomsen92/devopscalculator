@@ -151,6 +151,8 @@ jobs:
             export MYSQL_PASSWORD="${{ secrets.DATABASE_PASSWORD }}"
             cd dowa
             docker compose -f docker-compose.yaml pull
+            docker compose up -d mariadb
+            docker compose up flyway --exit-code-from	flyway
             docker compose -f docker-compose.yaml up -d      
                              
       #- name: Wait for services to be ready
