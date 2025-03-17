@@ -127,10 +127,10 @@ jobs:
         
       - name: Export Database Environment Variables
         run: |
-            echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> $GITHUB_ENV
-            echo "DATABASE_USER=${{ secrets.DATABASE_USER }}" >> $GITHUB_ENV
-            echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> $GITHUB_ENV
-            echo "DATABASE_ROOT_PASSWORD=${{ secrets.DATABASE_ROOT_PASSWORD }}" >> $GITHUB_ENV
+            echo "MYSQL_DATABASE=${{ secrets.DATABASE_NAME }}" >> $GITHUB_ENV
+            echo "MYSQL_USER=${{ secrets.DATABASE_USER }}" >> $GITHUB_ENV
+            echo "MYSQL_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> $GITHUB_ENV
+            echo "MYSQL_ROOT_PASSWORD=${{ secrets.DATABASE_ROOT_PASSWORD }}" >> $GITHUB_ENV
       
       
       - name: Create .env file for staging
