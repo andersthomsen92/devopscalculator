@@ -143,7 +143,7 @@ jobs:
           host: ${{ vars.STAGING_SERVER_IP }}
           username: ${{ vars.STAGING_SERVER_USERNAME }}
           key: ${{ secrets.STAGING_SERVER_SSH_KEY }}
-          source: "docker-compose.yaml,.env,db/migrations/**/*.*,nginx.conf,init-db.sql"
+          source: "docker-compose.yaml,.env,db/migrations/**/*.*,nginx.conf"
           target: dowa/
 
 
