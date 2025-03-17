@@ -125,7 +125,22 @@ jobs:
       - name: Display Version
         run: echo "Generated version is ${{ steps.semver-app.outputs.version }}"
         
-      
+      - name: Export Database Environment Variables
+        run: |
+          echo "MYSQL_DATABASE=${{ vars.DATABASE_NAME }}" >> $GITHUB_ENV
+          echo "MYSQL_USER=${{ vars.DATABASE_USER }}" >> $GITHUB_ENV
+          echo "MYSQL_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> $GITHUB_ENV
+          echo "MYSQL_ROOT_PASSWORD=${{ secrets.DATABASE_ROOT_PASSWORD }}" >> $GITHUB_ENV
+
+
+      - name: Create .env file for staging
+        run: |
+          cat > .env <<EOL
+          MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+          MYSQL_DATABASE=$MYSQL_DATABASE
+          MYSQL_USER=$MYSQL_USER
+          MYSQL_PASSWORD=$MYSQL_PASSWORD
+          EOL
 
           
       - name: Deliver Docker Compose file to staging
@@ -145,14 +160,8 @@ jobs:
           username: ${{ vars.STAGING_SERVER_USERNAME }}
           key: ${{ secrets.STAGING_SERVER_SSH_KEY }}
           script: |
-            export MYSQL_ROOT_PASSWORD="${{ secrets.DATABASE_ROOT_PASSWORD }}"
-            export MYSQL_DATABASE="${{ vars.DATABASE_NAME }}"
-            export MYSQL_USER="${{ vars.DATABASE_USER }}"
-            export MYSQL_PASSWORD="${{ secrets.DATABASE_PASSWORD }}"
             cd dowa
             docker compose -f docker-compose.yaml pull
-            docker compose up -d mariadb
-            docker compose up flyway --exit-code-from	flyway
             docker compose -f docker-compose.yaml up -d      
                              
       #- name: Wait for services to be ready
