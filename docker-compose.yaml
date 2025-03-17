@@ -3,11 +3,11 @@ services:
     image: ghcr.io/andersthomsen92/devopscalculator:staging
     ports:
       - "8080:8080"   
+    depends_on:
+      - mariadb
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__CalculatorDb: Server=mariadb;Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};
-    env_file:
-      - .env
       
       
   frontend:
@@ -48,4 +48,4 @@ services:
     command: migrate
 
 volumes:
-  mariadb_data:         
+  mariadb_data:
