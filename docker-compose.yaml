@@ -21,6 +21,8 @@ services:
   
   mariadb:
     image: mariadb:latest
+    env_file:
+      - .env
     environment:
       MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DATABASE_NAME}
@@ -36,6 +38,8 @@ services:
     container_name: flyway
     depends_on:
       - mariadb
+    env_file:
+      - .env
     environment:
       FLYWAY_URL: jdbc:mariadb://mariadb:3306/${DATABASE_NAME}
       FLYWAY_USER: ${DATABASE_USER}
